@@ -4,7 +4,6 @@ const readline = require("readline")
 const pickupLines = require("./custom_modules/pickup-lines");
 const countdownTimer = require("./custom_modules/countdown-timer");
 
-const cdsg = {updatePresence, onReadLine}
 let current_presence_generator;
 
 const inquirer = readline.createInterface({
@@ -12,39 +11,20 @@ const inquirer = readline.createInterface({
     output: process.stdout
 });
 
-
-function updatePresence(state, details,
-                        startTimestamp, endTimestamp,
-                        largeImageKey, largeImageText, smallImageKey, smallImageText,
-                        partyId, partySize, partyMax,
-                        matchSecret, joinSecret, spectateSecret,
-                        instance) {
-    client.updatePresence({
-        state: state || "",
-        details: details || "",
-        startTimestamp: startTimestamp || null,
-        endTimestamp: endTimestamp || null,
-        largeImageKey: largeImageKey || null,
-        largeImageText: largeImageText || null,
-        smallImageKey: smallImageKey || null,
-        smallImageText: smallImageText || null,
-        partyId: partyId || null,
-        partySize: partySize || null,
-        partyMax: partyMax || null,
-        matchSecret: matchSecret || null,
-        joinSecret: joinSecret || null,
-        spectateSecret: spectateSecret || null,
-        instance: instance || false,
-    });
-
-    console.log("Presence successfully updated.")
-}
-
 function onReadLine(query) {
     switch (query) {
         case "help": console.log(`help command called`); break;
     }
 }
+
+function updatePresence(state, details, startTimestamp, endTimestamp) {
+    client.updatePresence({
+        state: state,
+        details: details,
+        startTimestamp: startTimestamp,
+    });
+}
+
 
 function setGeneratorType() {
     inquirer.question(`What status setting do you want?
@@ -55,19 +35,28 @@ The options are:
         switch (query[0]) {
             case "pl":  // PICKUP LINES
                 console.log("Status type set to pickup lines");
-                let loop_speed = 15 * 60 * 1000;  // default loop_speed is 15 minutes
-                current_presence_generator = new pickupLines(loop_speed);
+                let loop_speed = Number(query[1]) * 1000 || 15 * 60 * 1000;  // default loop_speed is 15 minutes
+                current_presence_generator = pickupLines;
+                current_presence_generator.constructor(updatePresence, loop_speed);
                 break;
             case "ct":  // COUNTDOWN TIMER
                 console.log("Status type set to countdown timer");
                 let target_time = 10000000000;
-                current_presence_generator = new countdownTimer(target_time);
+                current_presence_generator = countdownTimer;
+                current_presence_generator.constructor(updatePresence, target_time);
                 break;
             default:
                 console.log(query + " is not a valid option. Please type 'pl' or 'ss'.");
                 setGeneratorType();
         }
+        current_presence_generator.start();
     });
 }
 
 setGeneratorType();
+
+/*
+client.updatePresence({
+    state: "Really, this is a test",
+    details: "This is a test",
+});*/

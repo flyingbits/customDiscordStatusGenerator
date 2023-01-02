@@ -20,15 +20,15 @@ function calculate_completion_percentage(start_time, target_time) {
 }
 
 class countdownTimer {
-    constructor(cdsg, target_time, percentage, start_time) {
-        this.cdsg = cdsg;
+    constructor(up, target_time, percentage, start_time) {
+        this.up = up;
         this.status = generate_status(start_time, target_time)
         this.start_time = start_time || null;
         this.target_time = target_time;
     }
 
     start() {
-        this.cdsg.updatePresence(this.status.status, this.status.description, this.start_time, this.target_time);
+        this.up(this.status.status, this.status.description, this.start_time, this.target_time);
     }
 
     stop() {

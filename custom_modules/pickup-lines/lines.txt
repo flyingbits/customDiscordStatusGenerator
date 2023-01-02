@@ -1,3 +1,11 @@
+****************************************************************************************************
+
+NOTE: THIS FILE IS NOT USED FOR PICKUP LINES
+MODIFYING THIS FILE WILL NOT CHANGE ANY PICKUP LINES IN THE pickup-lines MODULE
+TO UPDATE THE PICKUP LINES SHOWN, MODIFY THE TEXT IN THE /pickup-lines/index.js UNDER load_lines()
+
+****************************************************************************************************
+
 People are catching Coronavirus but the only thing I’m catching is feelings for you.
 I’d never play hide and seek with you because someone like you is impossible to find
 Let me tie your shoes, cause I dont want you falling for anyone else.
